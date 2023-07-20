@@ -23,7 +23,7 @@ describe("List Cars", () => {
       name: "Audi A1",
     });
 
-    const cars = await listCarsUseCase.execute({});
+    const cars = await listAvailableCarsUseCase.execute({});
 
     expect(cars).toEqual([car]);
   });
@@ -39,7 +39,7 @@ describe("List Cars", () => {
       name: "Audi A2",
     });
 
-    const cars = await listCarsUseCase.execute({ brand: "Audi" });
+    const cars = await listAvailableCarsUseCase.execute({ brand: "Audi" });
 
     expect(cars).toEqual([car]);
   });
@@ -55,7 +55,7 @@ describe("List Cars", () => {
       name: "Audi A3",
     });
 
-    const cars = await listCarsUseCase.execute({ name: "Audi 3" });
+    const cars = await listAvailableCarsUseCase.execute({ name: "Audi 3" });
 
     expect(cars).toEqual([car]);
   });
@@ -71,7 +71,7 @@ describe("List Cars", () => {
       name: "Audi A5",
     });
 
-    const cars = await listCarsUseCase.execute({
+    const cars = await listAvailableCarsUseCase.execute({
       category_id: "0340539d-4ec5-47db-b603-4c84088df187",
     });
 
