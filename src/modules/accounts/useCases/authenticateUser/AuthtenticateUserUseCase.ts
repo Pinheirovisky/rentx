@@ -3,6 +3,9 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { AppError } from "@shared/errors/AppError";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import auth from "@config/auth";
+import { DayjsDateProvider } from "@shared/container/providers/DateProvider/Implementations/DayjsDateProvider";
+import { IUsersTokenRepository } from "@modules/accounts/repositories/IUsersTokenRepository";
 
 interface IRequest {
   email: string;
@@ -15,17 +18,29 @@ interface IReponse {
     email: string;
   };
   token: string;
+  refresh_token: string;
 }
 
 @injectable()
 class AuthtenticateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("UsersTokensRepository")
+    private usersTokensRepository: IUsersTokenRepository,
+    @inject("DayjsDateProvider")
+    private dateProvider: DayjsDateProvider
   ) {}
 
   async execute({ email, password }: IRequest): Promise<IReponse> {
     const user = await this.usersRepository.findByEmail(email);
+    const {
+      expires_in_refresh_token,
+      expires_in_token,
+      expires_refresh_token_days,
+      secret_refresh_token,
+      secret_token,
+    } = auth;
 
     if (!user) {
       throw new AppError("Email or password incorrect");
@@ -37,9 +52,24 @@ class AuthtenticateUserUseCase {
       throw new AppError("Email or password incorrect");
     }
 
-    const token = sign({}, "19ebd1e70451add04bc90703f5b70dc0", {
+    const token = sign({}, secret_token, {
       subject: user.id,
-      expiresIn: "1d",
+      expiresIn: expires_in_token,
+    });
+
+    const refresh_token = sign({ email }, secret_refresh_token, {
+      subject: user.id,
+      expiresIn: expires_in_refresh_token,
+    });
+
+    const refresh_token_expires_date = this.dateProvider.addDays(
+      expires_refresh_token_days
+    );
+
+    await this.usersTokensRepository.create({
+      user_id: user.id,
+      refresh_token,
+      expires_date: refresh_token_expires_date,
     });
 
     const tokenReturn: IReponse = {
@@ -48,6 +78,7 @@ class AuthtenticateUserUseCase {
         name: user.name,
       },
       token,
+      refresh_token,
     };
 
     return tokenReturn;

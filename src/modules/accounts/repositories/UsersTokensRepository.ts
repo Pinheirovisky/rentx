@@ -3,7 +3,7 @@ import { ICreateUserTokenDTO } from "../dtos/ICreateUserTokenDTO";
 import { UserTokens } from "../infra/typeorm/entities/UserTokens";
 import { IUsersTokenRepository } from "./IUsersTokenRepository";
 
-class UserTokensRepository implements IUsersTokenRepository {
+class UsersTokensRepository implements IUsersTokenRepository {
   private repository: Repository<UserTokens>;
 
   constructor() {
@@ -27,4 +27,4 @@ class UserTokensRepository implements IUsersTokenRepository {
   }
 }
 
-export { UserTokensRepository };
+export { UsersTokensRepository };
