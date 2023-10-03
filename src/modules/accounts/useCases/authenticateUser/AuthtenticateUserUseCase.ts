@@ -5,7 +5,7 @@ import { AppError } from "@shared/errors/AppError";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import auth from "@config/auth";
 import { DayjsDateProvider } from "@shared/container/providers/DateProvider/Implementations/DayjsDateProvider";
-import { IUsersTokenRepository } from "@modules/accounts/repositories/IUsersTokenRepository";
+import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
 
 interface IRequest {
   email: string;
@@ -27,7 +27,7 @@ class AuthtenticateUserUseCase {
     @inject("UsersRepository")
     private usersRepository: IUsersRepository,
     @inject("UsersTokensRepository")
-    private usersTokensRepository: IUsersTokenRepository,
+    private usersTokensRepository: IUsersTokensRepository,
     @inject("DayjsDateProvider")
     private dateProvider: DayjsDateProvider
   ) {}

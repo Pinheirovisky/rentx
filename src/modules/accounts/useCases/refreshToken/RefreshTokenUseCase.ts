@@ -1,19 +1,20 @@
 import auth from "@config/auth";
-import { IUsersTokenRepository } from "@modules/accounts/repositories/IUsersTokenRepository";
+import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
 import { AppError } from "@shared/errors/AppError";
 import { sign, verify } from "jsonwebtoken";
-import { inject } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 
 interface IPayload {
   sub: string;
   email: string;
 }
 
+@injectable()
 class RefreshTokenUseCase {
   constructor(
-    @inject("IUsersTokenRepository")
-    private usersTokenRepository: IUsersTokenRepository,
+    @inject("UsersTokensRepository")
+    private usersTokenRepository: IUsersTokensRepository,
     @inject("DayjsDateProvider")
     private dateProvider: IDateProvider
   ) {}
