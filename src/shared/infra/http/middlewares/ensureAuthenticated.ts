@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 
-import { AppError } from "@shared/errors/AppError";
 import auth from "@config/auth";
+import { AppError } from "@shared/errors/AppError";
 
 interface IPayload {
   sub: string;
